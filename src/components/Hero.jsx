@@ -6,7 +6,7 @@ export default function Hero({ latestSlug }) {
       <div style={{ maxWidth: '850px' }}>
         <p className="label-caps" style={{ marginBottom: '1.5rem' }}>Editorial Journal</p>
         <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', marginBottom: '2.5rem', fontWeight: 800 }}>
-          Thoughts on design,<br />
+          My 2 Cents on design,<br />
           technology, and<br />
           intentional creativity.
         </h1>
