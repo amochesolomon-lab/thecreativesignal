@@ -7,8 +7,8 @@ export default function Hero({ latestSlug }) {
         <p className="label-caps" style={{ marginBottom: '1.5rem' }}>Editorial Journal</p>
         <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', marginBottom: '2.5rem', fontWeight: 800 }}>
           My 2 Cents on design,<br />
-          technology, and<br />
-          intentional creativity.
+          technology,<br />
+          intentional creativity and many more.
         </h1>
         {latestSlug && (
           <Link 

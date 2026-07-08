@@ -1,25 +1,30 @@
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-// If you are using React Router, import your Routes/Route components here.
-// For now, we will render your Home page as the default view.
 import Home from './pages/Home';
+import Archive from './pages/Archive';
+import Contact from './pages/Contact';
+import Issue from './pages/Issue';
 
 export default function App() {
   return (
     <div className="app-shell">
-      {/* 1. This handles your tactile scanline overlay background */}
+      {/* Structural visual background filter layer */}
       <div className="noise" />
 
-      {/* 2. Your actual modular navigation bar */}
+      {/* Global persistent header layer */}
       <Navbar />
 
-      {/* 3. The main content container that targets your editorial layout widths */}
+      {/* Router view switcher */}
       <main className="site-main">
-        {/* Your actual modular page components go right here */}
-        <Home />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/archive" element={<Archive />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/issue/:slug" element={<Issue />} />
+        </Routes>
       </main>
 
-      {/* 4. Your global brand footer */}
       <Footer />
     </div>
   );
