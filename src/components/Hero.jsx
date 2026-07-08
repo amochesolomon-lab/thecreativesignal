@@ -1,11 +1,10 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Hero({ latestSlug }) {
   return (
-    <section className="container" style={{ padding: '12rem 2rem 8rem 2rem' }}>
-      <div style={{ maxWidth: '800px' }}>
-        <p className="label-caps" style={{ marginBottom: '1.5rem' }}>The Creative Signal</p>
+    <header className="container" style={{ padding: '12rem 2rem 6rem 2rem' }}>
+      <div style={{ maxWidth: '850px' }}>
+        <p className="label-caps" style={{ marginBottom: '1.5rem' }}>Editorial Journal</p>
         <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', marginBottom: '2.5rem', fontWeight: 800 }}>
           Thoughts on design,<br />
           technology, and<br />
@@ -27,6 +26,6 @@ export default function Hero({ latestSlug }) {
           </Link>
         )}
       </div>
-    </section>
+    </header>
   );
 }

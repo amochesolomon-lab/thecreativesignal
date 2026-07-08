@@ -1,28 +1,41 @@
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://your-backend-vercel-url.vercel.app/api';
+// src/services/api.js
+// Complete frontend client layer
+
+const API_BASE = '/api';
 
 export const api = {
-  // Fetch all published issues
+  // 1. Fetches all issues/posts for the main feed list in Home.jsx
   async getIssues() {
-    const response = await fetch(`${API_BASE_URL}/issues`);
-    if (!response.ok) throw new Error('Failed to fetch issues');
+    const response = await fetch(`${API_BASE}/issues`);
+    if (!response.ok) {
+      throw new Error('Failed to transmit issues archive.');
+    }
     return response.json();
   },
 
-  // Fetch a single issue by slug
+  // 2. Fetches a specific standalone article for Issue.jsx
   async getIssueBySlug(slug) {
-    const response = await fetch(`${API_BASE_URL}/issues/${slug}`);
-    if (!response.ok) throw new Error('Issue not found');
+    const response = await fetch(`${API_BASE}/issues/${slug}`);
+    if (!response.ok) {
+      throw new Error('Failed to transmit individual issue data.');
+    }
     return response.json();
   },
 
-  // Subscribe a user to the newsletter
+  // 3. Handles email newsletter subscription pipelines
   async subscribe(email) {
-    const response = await fetch(`${API_BASE_URL}/subscribe`, {
+    const response = await fetch(`${API_BASE}/subscribe`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ email }),
     });
-    if (!response.ok) throw new Error('Subscription failed');
+    if (!response.ok) {
+      throw new Error('Subscription transmission failed.');
+    }
     return response.json();
   }
 };
+
+export default api;
