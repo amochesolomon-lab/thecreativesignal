@@ -1,84 +1,114 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import api from '../services/api';
 
 export default function Home() {
-  const [issues, setIssues] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    let isMounted = true;
-    api.getIssues()
-      .then(data => {
-        if (isMounted) {
-          setIssues(data);
-          setLoading(false);
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        if (isMounted) setLoading(false);
-      });
-    return () => { isMounted = false; };
-  }, []);
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await api.subscribe(email);
+      setSubscribed(true);
+      setEmail('');
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="container" style={{ paddingTop: '8rem' }}>
+    <div className="container" style={{ paddingTop: '12rem', paddingBottom: '12rem' }}>
       
-      {/* Introduction Block */}
-      <section style={{ marginBottom: '5rem' }}>
-        <span className="label-caps" style={{ fontSize: '0.7rem', display: 'block', marginBottom: '1rem', opacity: 0.5 }}>
-          Atmospheric Editorial Publication
+      {/* 1. THE INTRODUCTION (Primary Visual Weight) */}
+      <header style={{ marginBottom: '8rem' }}>
+        <span className="label-caps" style={{ fontSize: '0.7rem', display: 'block', marginBottom: '2rem', opacity: 0.4, letterSpacing: '0.2em' }}>
+          
         </span>
-        <h1 style={{ fontSize: '3rem', fontWeight: 700, margin: '0 0 1.5rem 0', letterSpacing: '-0.02em', color: '#ffffff' }}>
-          THE CREATIVE SIGNAL
+        <h1 style={{ fontSize: '4.5rem', fontWeight: 800, lineHeight: '1.05', letterSpacing: '-0.04em', margin: '0 0 2.5rem 0', color: '#ffffff' }}>
+          THE CREATIVE SIGNAL.
         </h1>
-        <p style={{ maxWidth: '38rem', lineHeight: '1.7', fontSize: '1.05rem', marginBottom: '2.5rem', color: '#ffffff', opacity: 0.8 }}>
-          Documenting the intersections of structural minimalist layout workflows, brutalist web styling, and autonomous code architectures.
+        <p style={{ fontSize: '1.5rem', lineHeight: '1.5', maxWidth: '44rem', color: '#ffffff', margin: 0, fontWeight: 400, opacity: 0.9 }}>
+          This is an independent digital publication documenting my ideas and creative process, my mistakes and my wins, to help someone out there who needs to know the way to go.
+          No Spam, Just Value.
         </p>
-        
-        {/* Navigation Action Triggers */}
-        <div style={{ display: 'flex', gap: '1.5rem' }}>
-          <Link to="/archive" className="label-caps" style={{ padding: '0.75rem 1.5rem', border: '1px solid #ffffff', color: '#ffffff', fontSize: '0.7rem', textDecoration: 'none' }}>
-            Explore Archive
-          </Link>
-          <Link to="/contact" className="label-caps" style={{ padding: '0.75rem 1.5rem', border: '1px solid rgba(255,255,255,0.2)', color: '#ffffff', fontSize: '0.7rem', textDecoration: 'none', opacity: 0.7 }}>
-            Connect Node
-          </Link>
-        </div>
+      </header>
+
+      {/* 2. WHY IT EXISTS (Secondary Structural Context) */}
+      <section style={{ marginBottom: '8rem', maxWidth: '38rem' }}>
+        <span className="label-caps" style={{ fontSize: '0.7rem', display: 'block', marginBottom: '2rem', opacity: 0.4, letterSpacing: '0.2em' }}>
+          
+        </span>
+        <h2 style={{ fontSize: '1.8rem', fontWeight: 700, margin: '0 0 1.5rem 0', color: '#ffffff', letterSpacing: '-0.02em' }}>
+          Why This Space Exists
+        </h2>
+        <p style={{ lineHeight: '1.8', fontSize: '1.05rem', color: '#ffffff', opacity: 0.7, marginBottom: '1.5rem' }}>
+          The Creative Signal is where I document the ideas that shape how I think, create, and solve problems. It's a personal collection of 
+          my observations, experiments, lessons, and reflections—not because I have all the answers, but because I believe the best ideas are 
+          worth capturing and sharing. This is my space to think out loud, learn in public, and leave a trail for anyone who finds value in thoughtful creativity.
+        </p>
       </section>
 
-      {/* Feed Stream */}
-      <section style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '3rem', marginBottom: '5rem' }}>
-        <span className="label-caps" style={{ fontSize: '0.7rem', display: 'block', marginBottom: '2.5rem', opacity: 0.5 }}>
-          Latest Transmissions
+      {/* 3. CALL TO ACTION (The Definitive Terminal Focal Point) */}
+      <section style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '4rem' }}>
+        <span className="label-caps" style={{ fontSize: '0.7rem', display: 'block', marginBottom: '2rem', opacity: 0.4, letterSpacing: '0.2em' }}>
+          // Subscribe
         </span>
-        
-        {loading ? (
-          <p style={{ fontFamily: 'monospace', opacity: 0.5, color: '#ffffff' }}>Syncing telemetry...</p>
-        ) : issues.length === 0 ? (
-          /* Hardcoded layout fallback tracking the structure of your original text layout */
-          <div style={{ marginBottom: '4rem' }}>
-            <span className="label-caps" style={{ fontSize: '0.65rem', display: 'block', marginBottom: '0.5rem', opacity: 0.5 }}>Issue #001 — July 2026</span>
-            <h3 style={{ fontSize: '1.6rem', fontWeight: 700, margin: '0 0 0.75rem 0', color: '#ffffff' }}>THE SHIFT TO STRUCTURAL DIRECTION</h3>
-            <p style={{ opacity: 0.8, maxWidth: '42rem', lineHeight: '1.6', color: '#ffffff' }}>
-              As AI integrations and terminal-centric agents reshape engineering boundaries, code is turning fluid. The role of the creator is shifting toward high-fidelity editorial curation.
-            </p>
-          </div>
+        <h2 style={{ fontSize: '2rem', fontWeight: 700, margin: '0 0 1rem 0', color: '#ffffff', letterSpacing: '-0.02em' }}>
+          Join the Signal
+        </h2>
+        <p style={{ fontSize: '1rem', color: '#ffffff', opacity: 0.6, marginBottom: '2.5rem', maxWidth: '28rem', lineHeight: '1.6' }}>
+          Subscribe to the newsletter to be notified of weekly drops on Sundays by 10AM. No spam, No Tracking, Just weekly creative Value.
+        </p>
+
+        {subscribed ? (
+          <p style={{ fontFamily: 'monospace', color: '#ffffff', opacity: 0.6, fontSize: '0.85rem' }}>
+            // Pipeline linked successfully. Welcome to the signal loop. Check your email address for confirmation.
+          </p>
         ) : (
-          <div>
-            {issues.map((issue) => (
-              <div key={issue.slug} style={{ marginBottom: '4rem' }}>
-                <span className="label-caps" style={{ fontSize: '0.65rem', display: 'block', marginBottom: '0.5rem', opacity: 0.5 }}>
-                  Issue #{issue.number || '001'}
-                </span>
-                <Link to={`/issue/${issue.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <h3 style={{ fontSize: '1.6rem', fontWeight: 700, margin: '0 0 0.75rem 0', color: '#ffffff' }}>{issue.title}</h3>
-                </Link>
-                <p style={{ opacity: 0.8, maxWidth: '42rem', lineHeight: '1.6', color: '#ffffff' }}>{issue.excerpt}</p>
-              </div>
-            ))}
-          </div>
+          <form onSubmit={handleSubscribe} style={{ display: 'flex', flexDirection: 'column', gap: '2rem', maxWidth: '28rem' }}>
+            <input 
+              type="email" 
+              placeholder="ENTER EMAIL ADDRESS" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{ 
+                background: 'transparent', 
+                border: 'none', 
+                borderBottom: '1px solid rgba(255,255,255,0.3)', 
+                padding: '0.75rem 0', 
+                color: '#ffffff', 
+                fontFamily: 'monospace',
+                fontSize: '0.9rem',
+                outline: 'none',
+                letterSpacing: '0.05em'
+              }} 
+              required
+              disabled={loading}
+            />
+            <button 
+              type="submit" 
+              className="label-caps" 
+              disabled={loading}
+              style={{ 
+                alignSelf: 'flex-start', 
+                background: 'transparent', 
+                border: '1px solid #ffffff', 
+                color: '#ffffff', 
+                padding: '0.75rem 1.5rem', 
+                fontSize: '0.7rem', 
+                cursor: 'pointer',
+                letterSpacing: '0.15em',
+                opacity: loading ? 0.5 : 1,
+                transition: 'border-color 0.2s ease'
+              }}
+            >
+              {loading ? 'LINKING...' : 'INITIALIZE FEED'}
+            </button>
+          </form>
         )}
       </section>
 

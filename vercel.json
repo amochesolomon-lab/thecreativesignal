@@ -6,10 +6,14 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [
+  "rewrites": [
+    { "source": "/api/cron/broadcast", "destination": "server.js" },
+    { "source": "/api/subscribe", "destination": "server.js" }
+  ],
+  "crons": [
     {
-      "src": "/api/(.*)",
-      "dest": "server.js"
+      "path": "/api/cron/broadcast",
+      "schedule": "0 9 * * 0"
     }
   ]
 }

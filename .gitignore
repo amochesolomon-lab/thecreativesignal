@@ -1,0 +1,12 @@
+# Environment Variables
+.env
+.env.*
+.env.local
+
+# Node Dependencies
+node_modules/
+package-lock.json
+
+# Build output and system files
+dist/
+.DS_Store
