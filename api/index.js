@@ -188,6 +188,34 @@ app.get('/api/cron/broadcast', async (req, res) => {
   }
 });
 
+
+// ==========================================================
+// ENDPOINT 3: PUBLIC ARCHIVE TELEMETRY (GET /api/issues)
+// ==========================================================
+app.get('/api/issues', async (req, res) => {
+  if (!isSupabaseConfigured) {
+    return res.status(500).json({ error: 'Database environment misconfigured on host.' });
+  }
+
+  try {
+    // Fetch all issues that have a status of 'sent' (newest first)
+    const { data: issues, error } = await supabase
+      .from('issues')
+      .select('*')
+      .eq('status', 'sent')
+      .order('id', { ascending: false });
+
+    if (error) throw error;
+
+    // Return the array of public issues directly to the frontend
+    return res.status(200).json(issues || []);
+
+  } catch (error) {
+    console.error('Archive Fetch Failure:', error);
+    return res.status(500).json({ error: 'Failed to retrieve issues archive telemetry.' });
+  }
+});
+
 // Local server fallback container (ignored by Vercel serverless layer automatically)
 const PORT = process.env.PORT || 5001; 
 app.listen(PORT, () => console.log(`// Terminal core executing cleanly on port ${PORT}`));
