@@ -3,14 +3,11 @@ import cors from 'cors';
 import { createClient } from '@supabase/supabase-js';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-import fs from 'fs';
 
-// 1. Load Environment Configuration Safely (.env or .env.local)
-dotenv.config(); 
-if (fs.existsSync('.env.local')) {
-  dotenv.config({ path: '.env.local' });
+// Only attempt to load a local file if we aren't running inside production Vercel
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
 }
-
 const app = express();
 
 // 2. Production-Optimized CORS Configuration
