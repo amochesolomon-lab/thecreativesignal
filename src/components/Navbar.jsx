@@ -10,7 +10,7 @@ export default function Navbar() {
           <img 
             src={logo} 
             alt="The Creative Signal Logo" 
-            style={{ height: '4.5rem', width: 'auto', display: 'block', objectFit: 'contain' }} 
+            style={{ height: '5.8rem', width: 'auto', display: 'block', objectFit: 'contain' }} 
           />
         </Link>
 
