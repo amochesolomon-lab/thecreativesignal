@@ -46,7 +46,7 @@ export default function Issue() {
         </header>
         
         <div 
-          className="issue-body" 
+          className="issue-body" className="text-gray-300 whitespace-pre-wrap"
           dangerouslySetInnerHTML={{ __html: issue.content }} 
           style={{ lineBreak: 'strict' }}
         />
