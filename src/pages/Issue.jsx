@@ -46,9 +46,9 @@ export default function Issue() {
         </header>
         
         <div 
-          className="issue-body" className="text-gray-300 whitespace-pre-wrap"
+          className="issue-body"
           dangerouslySetInnerHTML={{ __html: issue.content }} 
-          style={{ lineBreak: 'strict' }}
+          style={{ lineBreak: 'strict', whiteSpace: 'pre-wrap' }} // <-- ADDED THE PARAGRAPH FIX HERE
         />
       </article>
 
