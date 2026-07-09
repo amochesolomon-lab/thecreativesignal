@@ -14,7 +14,7 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173',                 // Local Vite development server
   'http://localhost:3000',                 // Alternative local fallback port
-  'https://thecreativesignal.vercel.app'   // Your future live production Vercel domain
+  'https://thecreativesignal.vercel.app'   // Your live production Vercel domain
 ];
 
 app.use(cors({
@@ -33,7 +33,6 @@ app.use(cors({
 app.use(express.json());
 
 // 3. Resource Initializations & Fail-safes
-// Replace the old process.exit(1) check with this:
 const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
@@ -46,8 +45,6 @@ if (isSupabaseConfigured) {
 } else {
   console.error('CRITICAL: Supabase credentials missing from production environment configurations.');
 }
-
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -70,12 +67,13 @@ console.log('// ------------------------------------');
 // ENDPOINT 1: USER SUBSCRIPTION PIPELINE (POST /api/subscribe)
 // ==========================================================
 app.post('/api/subscribe', async (req, res) => {
-  const { email } = req.body;
+  if (!isSupabaseConfigured) {
+    return res.status(500).json({ error: 'Database environment misconfigured on host.' });
+  }
 
+  const { email } = req.body;
   console.log(`\n// ---> INCOMING REQUEST FOR COORDINATE: ${email}`);
-if (!isSupabaseConfigured) {
-  return res.status(500).json({ error: 'Database environment misconfigured on host.' });
-}
+
   if (!email) {
     return res.status(400).json({ error: 'Email coordinate required.' });
   }
@@ -116,6 +114,10 @@ if (!isSupabaseConfigured) {
 // ENDPOINT 2: SECURED AUTOMATED CRON BROADCASTER (GET /api/cron/broadcast)
 // ==========================================================
 app.get('/api/cron/broadcast', async (req, res) => {
+  if (!isSupabaseConfigured) {
+    return res.status(500).json({ error: 'Database environment misconfigured on host.' });
+  }
+
   const authHeader = req.headers.authorization;
 
   // Protect path against unauthorized external URL hits
@@ -185,7 +187,6 @@ app.get('/api/cron/broadcast', async (req, res) => {
     return res.status(500).json({ error: 'Internal automation execution failure.' });
   }
 });
-
 
 // Local server fallback container (ignored by Vercel serverless layer automatically)
 const PORT = process.env.PORT || 5001; 
