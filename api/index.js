@@ -216,6 +216,40 @@ app.get('/api/issues', async (req, res) => {
   }
 });
 
+
+// ==========================================================
+// ENDPOINT 4: INDIVIDUAL ISSUE TELEMETRY (GET /api/issues/:slug)
+// ==========================================================
+app.get('/api/issues/:slug', async (req, res) => {
+  if (!isSupabaseConfigured) {
+    return res.status(500).json({ error: 'Database environment misconfigured on host.' });
+  }
+
+  const { slug } = req.params;
+
+  try {
+    // Fetch a specific issue matching the URL slug, ensuring it has been 'sent'
+    const { data: issue, error } = await supabase
+      .from('issues')
+      .select('*')
+      .eq('slug', slug)
+      .eq('status', 'sent')
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!issue) {
+      return res.status(404).json({ error: 'Transmission coordinate not found.' });
+    }
+
+    return res.status(200).json(issue);
+
+  } catch (error) {
+    console.error('Individual Issue Fetch Failure:', error);
+    return res.status(500).json({ error: 'Failed to retrieve single issue telemetry.' });
+  }
+});
+
 // Local server fallback container (ignored by Vercel serverless layer automatically)
 const PORT = process.env.PORT || 5001; 
 app.listen(PORT, () => console.log(`// Terminal core executing cleanly on port ${PORT}`));
