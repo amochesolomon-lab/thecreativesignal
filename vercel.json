@@ -1,14 +1,10 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "/api/index.js",
-      "use": "@vercel/node"
-    }
-  ],
   "rewrites": [
-    { "source": "/api/cron/broadcast", "destination": "/api/index.js" },
-    { "source": "/api/subscribe", "destination": "/api/index.js" }
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index.js"
+    }
   ],
   "crons": [
     {
