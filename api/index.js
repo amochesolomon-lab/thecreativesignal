@@ -33,12 +33,18 @@ app.use(cors({
 app.use(express.json());
 
 // 3. Resource Initializations & Fail-safes
+// Replace the old process.exit(1) check with this:
 const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
-  console.error('CRITICAL ERROR: Supabase credentials completely missing from environment.');
-  process.exit(1); 
+// Fail gracefully per-request rather than killing the serverless instance
+const isSupabaseConfigured = !!(supabaseUrl && supabaseKey);
+let supabase;
+
+if (isSupabaseConfigured) {
+  supabase = createClient(supabaseUrl, supabaseKey);
+} else {
+  console.error('CRITICAL: Supabase credentials missing from production environment configurations.');
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -67,7 +73,9 @@ app.post('/api/subscribe', async (req, res) => {
   const { email } = req.body;
 
   console.log(`\n// ---> INCOMING REQUEST FOR COORDINATE: ${email}`);
-
+if (!isSupabaseConfigured) {
+  return res.status(500).json({ error: 'Database environment misconfigured on host.' });
+}
   if (!email) {
     return res.status(400).json({ error: 'Email coordinate required.' });
   }
